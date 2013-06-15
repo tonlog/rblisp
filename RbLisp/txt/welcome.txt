@@ -1,0 +1,3 @@
+(Welcome- (It-is RbLisp)
+    (Enjoy '(your (coding (with it)))))
+    (Get more (with_command "(help)")
