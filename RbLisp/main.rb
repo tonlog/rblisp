@@ -2,7 +2,9 @@
 require 'sxp'
 require '../RbLisp/shell/interaction'
 
-SHELL::Interaction.irlb_with :scheme
+#SHELL::Interaction.irlb_with :scheme
+
+print SXP::Reader::Scheme.read '(define \'s #t)'
 
 =begin
 SHELL::Interaction.display SXP.read '(* 1 2)'

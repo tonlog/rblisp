@@ -1,7 +1,7 @@
 module Toolkit
-  extend self
+    extend self
 
-  def map_with_(file_name, map_action, rescue_action, extra_action = nil)
+    def map_with_(file_name, map_action, rescue_action, extra_action = nil)
     raise Exception unless map_action.is_a?(Proc) &&
         rescue_action.is_a?(Proc) &&
         map_action.parameters.length > 0
@@ -15,22 +15,30 @@ module Toolkit
           extra_action.call if !extra_action.nil? && extra_action.is_a?(Proc)
       end
     end
-  end
+    end
 
-  def make_num_compu(opr, value_for_start = nil, value_for_nonargs = nil, debug = nil)
+    def make_num_compu(opr, value_for_start = nil, value_for_default = nil, debug = nil)
     lambda {|args|
       puts args.inspect
       if !args.nil? && (args.is_a?(Array) && args.length > 0)
         return opr.call(value_for_start,args[0]) if args.length == 1
 
         for_start = args[0]
-        print 'sta:',for_start, "\n" if debug.nil?
         args[1...args.length].each { |arg| for_start = opr.call(for_start, arg)}
         for_start
       else
-        value_for_nonargs || 0
+        value_for_default || 0
       end
     }
-  end
+    end
+
+    def make_pair_func(opr_sym, default_args_num = 1)
+        lambda { |args|
+            RSCHEME_INFO::check_arg args, default_args_num
+            raise Exception,self.get_err(:Not_pair) unless args[0].is_a? Pair
+            args[0].method(opr_sym).call
+        }
+    end
+
 
 end

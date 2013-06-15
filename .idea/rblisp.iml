@@ -4,8 +4,7 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="PROVIDED" name="rubygems-update (v1.8.24, ruby-1.9.3-p194 (1)) [gem]" level="application" />
-    <orderEntry type="library" scope="PROVIDED" name="sxp (v0.0.13, ruby-1.9.3-p194 (1)) [gem]" level="application" />
+    <orderEntry type="library" scope="PROVIDED" name="sxp (v0.0.13, ruby-1.9.3-p194) [gem]" level="application" />
   </component>
 </module>
 
