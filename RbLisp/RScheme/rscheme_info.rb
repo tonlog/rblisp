@@ -48,25 +48,10 @@ module RSCHEME_INFO
         :* => Toolkit::make_num_compu(lambda {|a1,a2| a1 * a2}, value_for_start = 1),
         :/ => Toolkit::make_num_compu(lambda {|a1,a2| a1 / a2}, value_for_start = 1, value_for_default = 0),
 
-
-
-
         :boolean? => lambda { |sym|
                 RSCHEME_INFO::check_arg sym, 1
                 if sym[0]; T; else F end
             },
-        :symbol? => lambda { |sym|
-                RSCHEME_INFO::check_arg sym, 1
-                if sym.nil?
-                    F
-                elsif sym.is_a? Symbol
-                    T
-                else
-                    F
-                end
-            },
-
-
     }
 
 

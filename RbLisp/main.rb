@@ -4,10 +4,10 @@ require '../RbLisp/shell/interaction'
 
 #SHELL::Interaction.irlb_with :scheme
 
-print SXP::Reader::Scheme.read '(define \'s #t)'
+#print SXP::Reader::Scheme.read '(define \'s #t)'
 
-=begin
-SHELL::Interaction.display SXP.read '(* 1 2)'
+#begin
+#SHELL::Interaction.display SXP.read '(* 1 2)'
 SHELL::Interaction.display SXP.read <<-EOX
   (define (fact n)
     (if (= n 0)
@@ -19,4 +19,4 @@ SHELL::Interaction.display SXP.read <<-EOX
 EOX
 
 puts ''
-=end
+#=end
