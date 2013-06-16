@@ -1,5 +1,7 @@
 module RSCHEME_INFO
     require_relative 'pair'
+    require_relative 'env'
+    require_relative '../Proc/lambda'
     load '../util/toolkit.rb'
 
     T = :'#t'
@@ -14,10 +16,29 @@ module RSCHEME_INFO
     }
 
     BUILT_IN_SET = [
-        :define
+        :define,
+        :lambda,
     ]
 
     INIT_GLOBAL = {
+        :lambda => lambda { |args|
+
+            evaluator = args[:evaluator]
+            expr = args[:params]
+            raise Exception, 'Missing arg_list and body.' if expr.nil? || expr.length != 2
+            arg_list = expr[0]
+            body = expr[1]
+            form_params = Lambda.extract_form_params arg_list, []
+            closure_env = Lambda.extract_body body, evaluator.current_env, Env.new(:super_env => nil)
+
+            Lambda.new :env => closure_env, :form_params => form_params, :body => body
+        },
+
+
+
+
+
+
         :define => lambda { |args|
                 Args = args[:args]
                 RSCHEME_INFO::check_arg Args, 1
@@ -45,7 +66,7 @@ module RSCHEME_INFO
 
         :+ => Toolkit::make_num_compu(lambda {|a1,a2| a1 + a2}, value_for_start = 0),
         :- => Toolkit::make_num_compu(lambda {|a1,a2| a1 - a2}, value_for_start = 0),
-        :* => Toolkit::make_num_compu(lambda {|a1,a2| a1 * a2}, value_for_start = 1),
+        :* => Toolkit::make_num_compu(lambda {|a1,a2| a1 * a2}, value_for_start = 1,value_for_default = 1),
         :/ => Toolkit::make_num_compu(lambda {|a1,a2| a1 / a2}, value_for_start = 1, value_for_default = 0),
 
         :boolean? => lambda { |sym|

@@ -17,24 +17,25 @@ module TYPE_PROCESSOR
         def self.array(args)
             expr = args[:expr]
             opr = @@evaluator.eval(expr[0])
-            return if opr.nil?
-            raise Exception, opr + RSCHEME_INFO::get_err(:Not_operator) unless !opr.nil? && opr.is_a?(Proc)
 
-            if RSCHEME_INFO::any_built_in?(expr[0]); opr.call :args => expr[1..expr.length], :evaluator => @@evaluator, :env => @@evaluator.current_env
+            return if opr.nil?
+            raise Exception, opr.to_s + RSCHEME_INFO::get_err(:Not_operator) unless !opr.nil? && (opr.is_a?(Proc) || opr.is_a?(Lambda))
+            if RSCHEME_INFO::any_built_in?(expr[0]);
+                opr.call :params => expr[1..expr.length], :evaluator => @@evaluator
             else
                 raw_args = expr[1...expr.length]
                 pr_args = raw_args.inject([]) do |sum, each_arg|
-                    sum.push @@evaluator.eval(each_arg)
+                    v = @@evaluator.eval(each_arg)
+                    sum.push v
                 end
-                pr_args.push @@evaluator.current_env
-                opr.call(pr_args)
+                pr_args = [] if pr_args.nil? || (pr_args.length == 1 && pr_args[0].nil?)
+                opr.call :params => pr_args, :evaluator => @@evaluator
             end
 
         end
 
         def self.symbol(args)
             expr = args[:expr]
-
             if expr =~ /'.+/; expr[1..expr.to_s.length-1]
             else
                 value_of_sym = @@evaluator.current_env[expr]
@@ -43,9 +44,7 @@ module TYPE_PROCESSOR
             end
         end
 
-        def self.other(args)
-            args[:expr]
-        end
+        def self.other(args); args[:expr] end
 
     end
 end

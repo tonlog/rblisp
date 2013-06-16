@@ -36,7 +36,8 @@ class Evaluator
                 else            TYPE_PROCESSOR::Processor.process_with :type => :other, :evaluator => self, :expr => expr
             end
         rescue Exception => e
-            puts "Error: #{e}"
+            puts
+            puts "Error: #{e}", $@
             return
         end
     end
@@ -45,13 +46,13 @@ end
 
 global_env = Env.new :super_env => nil
 RSCHEME_INFO::init_global.each_pair do |key, value|
-  global_env[key] = value
+    global_env[key] = value
 end
 evaluator = Evaluator.new :top_level => global_env
 
-print evaluator.eval([:caar, [:cons, [:cons, 5, nil], 3]])
-puts
-print evaluator.eval :x
-print evaluator.eval([:define, :x, 2])
-puts
-print evaluator.eval :x
+lam =  evaluator.eval([[:lambda, [:x], [:*, 1.2, :x]], 3])
+#print lam.call :params => [], :evaluator => evaluator
+print lam
+
+
+
