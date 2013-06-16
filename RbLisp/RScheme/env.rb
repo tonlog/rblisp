@@ -10,7 +10,15 @@ class Env < Hash
   def escape_env; @super_env = nil end
 
   def [](symbol)
-    hash_get symbol || @super_env.nil? || @super_env[symbol]
+=begin
+    puts '----------------------'
+    puts self.inspect
+    puts self.super_env
+    puts self.super_env.super_env unless self.super_env.nil?
+    puts symbol
+    puts '----------------------'
+=end
+    hash_get(symbol) || @super_env.nil? || @super_env[symbol]
   end
 end
 

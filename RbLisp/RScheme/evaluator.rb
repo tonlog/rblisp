@@ -19,12 +19,20 @@ class Evaluator
     def attach(cur_env)
         cur_env.super_env = @current_env
         @current_env = cur_env
+=begin
+        puts '>> Attach and current is: ' + @current_env.to_s
+        puts '>> super is ' + @current_env.super_env.to_s
+=end
     end
 
     def detach
         current = @current_env.super_env
         @current_env.escape_env
         @current_env = current
+=begin
+        puts '>> Detach and current is:  ' + @current_env.to_s
+        puts '>> super is ' + @current_env.super_env.to_s
+=end
     end
 
     def eval(expr)
@@ -36,8 +44,7 @@ class Evaluator
                 else            TYPE_PROCESSOR::Processor.process_with :type => :other, :evaluator => self, :expr => expr
             end
         rescue Exception => e
-            puts
-            puts "Error: #{e}", $@
+            puts "Error: #{e}"#, $@
             return
         end
     end
@@ -50,9 +57,16 @@ RSCHEME_INFO::init_global.each_pair do |key, value|
 end
 evaluator = Evaluator.new :top_level => global_env
 
-lam =  evaluator.eval([[:lambda, [:x], [:*, 1.2, :x]], 3])
-#print lam.call :params => [], :evaluator => evaluator
-print lam
+#lam = evaluator.eval [[:lambda, [], [:+, 1, 1], [:+, 2, 3], [:+, 3, 8]]]
+lam = evaluator.eval [:+]
+lam = evaluator.eval [:let, [[:x, 5], [:y, 3]], [:define, [:f, :x, :y], [:*, :y, :x]], [:f, :x, :y]]
+print lam, "\n"
+
+puts evaluator.eval [:and, 1, 2]
+puts evaluator.eval [:and, 1, nil, 2]
+puts evaluator.eval [:or, false, false, [:+, 2, 3]]
+puts evaluator.eval [:not, false]
+puts evaluator.eval [:not]
 
 
 

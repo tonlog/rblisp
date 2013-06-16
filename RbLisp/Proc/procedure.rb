@@ -10,15 +10,20 @@ class Procedure
 
     def call args
         params = args[:params]
-        raise Exception, "Arguments does not match. Given #{params.length} for #{@form_params.length} required." unless @form_params.length == params.length
-        evaluator = args[:evaluator]
-
-        params.length.times do |count|
-            form_param = @form_params[count]
-            param_value = params[count]
-            @env[form_param] = param_value
+        raise Exception, "Argument does not match given as required. Addtional to non-args procedure."if (params.nil? && @form_params.length > 0) || (!params.nil? && @form_params.length == 0)
+        unless (!params.nil? && @form_params.length == params.length) || params.nil?
+            raise Exception, "Arguments does not match. Given #{params.nil?? 'None': params.length} for #{@form_params.length} required."
         end
 
+        evaluator = args[:evaluator]
+
+        unless params.nil?
+            params.length.times do |count|
+                form_param = @form_params[count]
+                param_value = params[count]
+                @env[form_param] = param_value
+            end
+        end
         evaluator.attach @env
         result = execute_with evaluator
         evaluator.detach
@@ -38,7 +43,7 @@ class Procedure
         expr.each { |element|
             redo if element.nil?
             if element.is_a? Symbol
-                closure_env[element] = env[element]
+                closure_env[element] = env[element] unless env[element].nil?
             elsif element.is_a? Array
                 extract_body element, env, closure_env
             end

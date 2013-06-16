@@ -20,12 +20,14 @@ module Toolkit
     def make_num_compu(opr, value_for_start = nil, value_for_default = nil, debug = nil)
     lambda {|maps|
         args = maps[:params]
-        return opr.call(value_for_start,args[0]) if args.length == 1
+
         if !args.nil? && (args.is_a?(Array) && args.length > 1)
             for_start = args[0]
             args = args[1..args.length-1]
             args.each { |arg| for_start = opr.call(for_start, arg)}
             for_start
+        elsif !args.nil? && args.length == 1
+            opr.call(value_for_start,args[0])
         else
             value_for_default || 0
         end
